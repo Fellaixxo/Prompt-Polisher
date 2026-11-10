@@ -1,7 +1,7 @@
 {
   "name": "prompt-polisher",
   "version": "2.0.0",
-  "description": "Prompt Polisher | AI Upgrader",
+  "description": "Prompt Polisher | AI Upgrader - Cloudflare Worker",
   "main": "dist/index.js",
   "scripts": {
     "dev": "wrangler dev",
@@ -11,6 +11,7 @@
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20240117.0",
+    "@types/node": "^26.6.6",
     "typescript": "^5.3.3"
   }
 }
