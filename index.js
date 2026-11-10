@@ -1,6 +1,3 @@
---b4dab6991a6e0b08e90a927bdeadd1c4e64ebecdb5961989b193f0c438aa
-Content-Disposition: form-data; name="worker.js"
-
 // =============================================================================
 //  PROMPT POLISHER — HARDENED CLOUDFLARE WORKER
 //  FIXES: Gumroad API error handling + brute-force protection for paid users
