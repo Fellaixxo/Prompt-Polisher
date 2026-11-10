@@ -1,0 +1,4 @@
+name = "prompt-polisher"
+account_id = "567c8069ab6e426c56aa2fc385293569"
+main = "index.js"
+compatibility_date = "2024-01-01"

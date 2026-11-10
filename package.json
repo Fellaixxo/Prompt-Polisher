@@ -1,0 +1,16 @@
+{
+  "name": "prompt-polisher",
+  "version": "2.0.0",
+  "description": "Prompt Polisher | AI Upgrader",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "wrangler dev",
+    "build": "tsc",
+    "deploy": "npm run build && wrangler deploy",
+    "tail": "wrangler tail"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20240117.0",
+    "typescript": "^5.3.3"
+  }
+}
