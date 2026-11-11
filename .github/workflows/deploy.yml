@@ -12,7 +12,7 @@ jobs:
           node-version: 20
       - run: npm install
       - run: npm run build
-      - run: ls -la dist/  # Debug: verify dist/index.js exists
+      - run: test -f dist/index.js || (echo "Build failed: dist/index.js not found" && exit 1)
       - uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
