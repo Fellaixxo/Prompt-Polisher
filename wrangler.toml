@@ -5,4 +5,7 @@ compatibility_date = "2024-01-01"
 
 [[kv_namespaces]]
 binding = "PROMPT_KEYS"
-id = "34f51dcd686b4d7391eb427e926002cb"
+id = "4a861143c7cb4e8788cfca05579de502"
+
+[ai]
+binding = "AI"

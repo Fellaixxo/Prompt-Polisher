@@ -1,56 +1,26 @@
-import { CONFIG, SYSTEM_PROMPT } from '../config';
-import { sanitizeOutput, validatePrompt } from './sanitizer';
-import type { Env, PolishResult, PolishingOptions } from '../types';
+import { CONFIG } from '../config';
+import { Env } from '../types';
 
-export async function polishPrompt(
-  prompt: string,
-  options: PolishingOptions = {},
-  env: Env
-): Promise<PolishResult> {
-  const validation = validatePrompt(prompt);
-  if (!validation.valid) {
-    return { success: false, error: validation.error };
-  }
+interface PolishingOptions { isPro: boolean; }
 
-  try {
-    const fullPrompt = `${SYSTEM_PROMPT}\n\n<user_prompt>${prompt}</user_prompt>`;
-    const response = await callAIModel(fullPrompt, env);
-    const polished = sanitizeOutput(response);
+export async function polishPrompt(prompt: string, options: PolishingOptions, env: Env): Promise<{ success: boolean; polished?: string; error?: string; metadata?: { model: string; tokens: number; processingTime: number } }> {
+  const startTime = Date.now();
+  const SYSTEM_PROMPT = "You are a Meta-Prompt Architect. Your sole function is to rewrite a user's rough idea into a detailed, production-grade system prompt that will be fed into another AI. You NEVER answer the user's question. You NEVER fulfill the user's request directly. You ONLY write the prompt that another LLM will use to fulfill it.";
 
-    const result: PolishResult = {
-      success: true,
-      polished,
-      metadata: {
-        model: CONFIG.AI_MODELS[0],
-        tokens: estimateTokens(polished),
-        processingTime: Date.now() - Date.now(), // Will be updated
-      },
-    };
-
-    return result;
-  } catch (error: any) {
-    return { success: false, error: `AI processing error: ${error.message}` };
-  }
-}
-
-async function callAIModel(prompt: string, env: Env): Promise<string> {
   for (const model of CONFIG.AI_MODELS) {
     try {
-      const response = await env.AI.run(model, {
+      const response: any = await env.AI.run(model, {
         messages: [
           { role: 'system', content: SYSTEM_PROMPT },
-          { role: 'user', content: prompt },
-        ],
+          { role: 'user', content: `Rewrite this into a polished meta-prompt:\n\n<user_prompt>${prompt}</user_prompt>` }
+        ]
       });
-      return response;
-    } catch (error) {
-      console.warn(`Model ${model} failed, trying next...`, error);
-      continue;
-    }
+      return {
+        success: true,
+        polished: response.response,
+        metadata: { model, tokens: response.usage?.totalTokens || 0, processingTime: Date.now() - startTime }
+      };
+    } catch (e) { continue; }
   }
-  throw new Error('All AI models failed');
-}
-
-function estimateTokens(text: string): number {
-  return Math.ceil(text.length / 4);
+  return { success: false, error: "All AI models failed" };
 }

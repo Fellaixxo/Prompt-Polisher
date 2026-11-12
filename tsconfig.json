@@ -3,17 +3,15 @@
     "target": "ES2021",
     "module": "ESNext",
     "lib": ["ES2021"],
-    "types": ["@cloudflare/workers-types", "node"],
+    "types": ["@cloudflare/workers-types"],
+    "moduleResolution": "node",
     "strict": true,
     "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true,
-    "moduleResolution": "node",
-    "outDir": "./dist",
-    "rootDir": "./src",
-    "skipLibCheck": true
+    "outDir": "dist",
+    "rootDir": "src"
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist"]
+  "exclude": ["node_modules"]
 }

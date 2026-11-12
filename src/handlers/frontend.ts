@@ -7,7 +7,6 @@ export const HTML_FRONTEND = `
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prompt Polisher | AI Upgrader</title>
-    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .no-select { user-select: none; -webkit-user-select: none; }
         .honeypot { position: absolute; left: -9999px; opacity: 0; pointer-events: none; }
@@ -63,7 +62,8 @@ export const HTML_FRONTEND = `
             <button onclick="closePaywall()" class="text-xs text-gray-400 hover:text-white underline">I have a key / Enter key</button>
         </div>
     </div>
-    <script>
+    <script src="/frontend.js">
+  console.log("Frontend script loaded");
         let deviceFingerprint = '';
 
         async function computeDeviceFingerprint() {
@@ -145,7 +145,6 @@ export const HTML_FRONTEND = `
         }
 
         async function initFingerprint() {
-            deviceFingerprint = await computeDeviceFingerprint();
         }
 
         function getSessionToken() {
@@ -175,12 +174,14 @@ export const HTML_FRONTEND = `
         }
 
         async function polishPrompt() {
+        console.log("polishPrompt called");
             const roughPrompt = document.getElementById('roughPrompt').value.trim();
             const licenseKey = document.getElementById('licenseKey').value.trim();
             const honeypot = document.getElementById('website').value;
 
             if (honeypot) { console.warn('Honeypot triggered'); return; }
 
+            const deviceFingerprint = await computeDeviceFingerprint();
             const btnText = document.getElementById('btnText');
             const spinner = document.getElementById('spinner');
             const outputContainer = document.getElementById('outputContainer');
@@ -192,7 +193,7 @@ export const HTML_FRONTEND = `
             try {
                 const response = await fetch('/api/v1/polish', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 'Content-Type': 'application/json', 'User-Agent': navigator.userAgent },
                     body: JSON.stringify({
                         prompt: roughPrompt,
                         licenseKey: licenseKey,
@@ -249,7 +250,6 @@ export const HTML_FRONTEND = `
             await initFingerprint();
             updateTrialBadge();
         });
-    </script>
 </body>
 </html>
 `;
