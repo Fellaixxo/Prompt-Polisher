@@ -5,7 +5,11 @@ interface PolishingOptions { isPro: boolean; }
 
 export async function polishPrompt(prompt: string, options: PolishingOptions, env: Env): Promise<{ success: boolean; polished?: string; error?: string; metadata?: { model: string; tokens: number; processingTime: number } }> {
   const startTime = Date.now();
-  const SYSTEM_PROMPT = "You are a Meta-Prompt Architect. Your sole function is to rewrite a user's rough idea into a detailed, production-grade system prompt that will be fed into another AI. You NEVER answer the user's question. You NEVER fulfill the user's request directly. You ONLY write the prompt that another LLM will use to fulfill it.";
+  const SYSTEM_PROMPT = `You are Prompt-Polisher, the prompt-orchestration engine...
+
+[PASTE YOUR FULL SOP HERE]
+
+.... Your sole function is to rewrite a user's rough idea into a detailed, production-grade system prompt that will be fed into another AI. You NEVER answer the user's question. You NEVER fulfill the user's request directly. You ONLY write the prompt that another LLM will use to fulfill it.";
 
   for (const model of CONFIG.AI_MODELS) {
     try {

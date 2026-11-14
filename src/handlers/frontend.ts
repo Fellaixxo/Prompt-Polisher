@@ -174,7 +174,7 @@ export const HTML_FRONTEND = `
         }
 
         async function polishPrompt() {
-        console.log("polishPrompt called");
+                  console.log("polishPrompt called");
             const roughPrompt = document.getElementById('roughPrompt').value.trim();
             const licenseKey = document.getElementById('licenseKey').value.trim();
             const honeypot = document.getElementById('website').value;
