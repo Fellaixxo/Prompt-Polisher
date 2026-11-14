@@ -1,255 +1,172 @@
 import { CONFIG } from '../config';
 
-export const HTML_FRONTEND = `
-<!DOCTYPE html>
+export const HTML_FRONTEND = `<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prompt Polisher | AI Upgrader</title>
-    <style>
-        .no-select { user-select: none; -webkit-user-select: none; }
-        .honeypot { position: absolute; left: -9999px; opacity: 0; pointer-events: none; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prompt Polisher | AI Upgrader</title>
+<style>
+:root{--bg:#0a0e1a;--card:#111827;--card2:#0d1424;--ink:#e5e7eb;--mut:#9ca3af;--line:#27324a;--brand:#6366f1;--brand2:#22d3ee;--ok:#34d399;--warn:#fbbf24;--bad:#f87171;--r:16px}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:radial-gradient(1200px 600px at 80% -10%,rgba(99,102,241,.25),transparent),radial-gradient(900px 500px at -10% 110%,rgba(34,211,238,.18),transparent),var(--bg);display:flex;align-items:center;justify-content:center;padding:16px}
+.card{width:100%;max-width:760px;background:linear-gradient(180deg,rgba(255,255,255,.03),transparent),var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:0 30px 80px rgba(0,0,0,.5);padding:22px}
+.head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:14px}
+h1{font-size:24px;margin:0;background:linear-gradient(90deg,var(--brand),var(--brand2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{color:var(--mut);font-size:13px;margin-top:4px}
+.badge{font-size:12px;font-weight:600;padding:6px 12px;border-radius:999px;border:1px solid var(--line);background:rgba(99,102,241,.12);color:#c7d2fe;white-space:nowrap}
+.badge.zero{background:rgba(248,113,113,.14);border-color:rgba(248,113,113,.4);color:#fecaca}
+.badge.pro{background:rgba(52,211,153,.14);border-color:rgba(52,211,153,.4);color:#bbf7d0}
+label{display:block;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--mut);margin:14px 0 6px;font-weight:700}
+textarea,input{width:100%;background:var(--card2);border:1px solid var(--line);color:var(--ink);border-radius:12px;padding:14px;font-size:14px;outline:none;transition:border .2s,box-shadow .2s;font-family:inherit}
+textarea:focus,input:focus{border-color:var(--brand);box-shadow:0 0 0 3px rgba(99,102,241,.25)}
+textarea{resize:vertical;min-height:120px}
+.out{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;line-height:1.55;color:#d1fae5;min-height:160px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;margin-top:14px;border:none;cursor:pointer;font-weight:700;font-size:15px;padding:14px 16px;border-radius:12px;color:#fff;background:linear-gradient(90deg,var(--brand),#4f46e5);box-shadow:0 10px 30px rgba(79,70,229,.35);transition:transform .08s,filter .2s}
+.btn:hover{filter:brightness(1.08)}.btn:active{transform:translateY(1px)}.btn:disabled{opacity:.6;cursor:not-allowed}
+.btn.ghost{width:auto;background:transparent;border:1px solid var(--line);color:var(--mut);box-shadow:none;font-size:12px;padding:8px 12px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin-top:14px}
+.hidden{display:none!important}
+.spin{width:18px;height:18px;border:3px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:sp .8s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.sec{margin-top:18px;border:1px solid var(--line);border-radius:12px;background:var(--card2);padding:14px}
+.sec h3{margin:0 0 8px;font-size:13px;color:var(--brand2);text-transform:uppercase;letter-spacing:.06em}
+.sec.ok h3{color:var(--ok)}.sec.warn h3{color:var(--warn)}.sec.bad h3{color:var(--bad)}
+ul{margin:0;padding-left:18px}li{margin:6px 0;font-size:13px;color:var(--ink);line-height:1.5}
+.meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.chip{font-size:11px;color:var(--mut);border:1px solid var(--line);border-radius:999px;padding:4px 10px;background:rgba(255,255,255,.02)}
+.chip b{color:var(--ink)}
+details{margin-top:12px;border:1px solid var(--line);border-radius:12px;background:var(--card2);padding:10px 14px}
+summary{cursor:pointer;font-size:13px;font-weight:700;color:#c7d2fe}
+details p,details li{color:var(--mut);font-size:13px;line-height:1.6}
+.foot{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:16px;padding-top:14px;border-top:1px solid var(--line)}
+.foot a,.foot button{color:var(--brand2);text-decoration:none;font-size:12px;background:none;border:none;cursor:pointer}
+.foot a:hover{text-decoration:underline}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.78);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:16px;z-index:50}
+.modal .box{max-width:420px;width:100%;background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:26px;text-align:center;box-shadow:0 30px 80px rgba(0,0,0,.6)}
+.modal .gem{font-size:46px}
+.modal h2{margin:8px 0;font-size:20px}
+.modal p{color:var(--mut);font-size:14px;margin:0 0 18px;line-height:1.6}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:#052e16;color:#bbf7d0;border:1px solid #14532d;padding:10px 16px;border-radius:10px;font-size:13px;opacity:0;transition:.25s;z-index:60;pointer-events:none}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+@media(max-width:520px){.head{flex-direction:column}.card{padding:16px}}
+</style>
 </head>
-<body class="bg-gray-900 text-gray-100 min-h-screen flex items-center justify-center p-4">
-    <div class="max-w-2xl w-full bg-gray-800 rounded-xl shadow-2xl p-6 border border-gray-700 relative">
-        <div class="flex justify-between items-start mb-4">
-            <div>
-                <h1 class="text-3xl font-bold text-blue-400 no-select">Prompt Polisher 💎</h1>
-                <p class="text-gray-400 text-sm mt-1">Turn rough ideas into structured AI prompts instantly.</p>
-            </div>
-            <span id="trialBadge" class="bg-blue-900/50 text-blue-300 text-xs px-3 py-1 rounded-full border border-blue-700/50 font-semibold">Checking...</span>
-        </div>
-        <input type="text" id="website" name="website" class="honeypot" tabindex="-1" autocomplete="off">
-        <label class="block text-xs text-gray-400 mb-1 font-semibold uppercase">Rough Prompt</label>
-        <textarea id="roughPrompt" rows="5" maxlength="3000" placeholder="Paste your rough prompt here and click Polish..."
-            class="w-full bg-gray-700 border border-gray-600 rounded-lg p-4 mb-4 focus:ring-2 focus:ring-blue-500 outline-none resize-none text-sm"></textarea>
-        <button id="polishBtn" onclick="polishPrompt()"
-            class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3.5 rounded-lg transition-all flex justify-center items-center shadow-lg shadow-blue-600/20">
-            <span id="btnText">Polish Prompt ✨</span>
-        </button>
-        <div id="outputContainer" class="mt-6 hidden">
-            <div class="flex justify-between items-center mb-2">
-                <h3 class="font-semibold text-green-400">Polished Masterpiece:</h3>
-                <button onclick="copyToClipboard()" class="text-xs bg-gray-700 hover:bg-gray-600 px-3 py-1 rounded transition-all">Copy</button>
-            </div>
-            <textarea id="polishedOutput" rows="10" readonly
-                class="w-full bg-gray-900 border border-gray-700 rounded-lg p-4 text-green-300 outline-none resize-none text-sm font-mono"></textarea>
-        </div>
-        <div class="mt-6 pt-4 border-t border-gray-700/60 flex justify-between items-center">
-            <button onclick="toggleKeyInput()" class="text-xs text-gray-400 hover:text-blue-400 transition-all flex items-center gap-1">
-                🔑 Have a License Key?
-            </button>
-            <a href="${CONFIG.PAYMENT_LINK}" target="_blank" class="text-xs text-blue-400 hover:underline">
-                Get 3 Months Access ($3.50) ↗
-            </a>
-        </div>
-        <div id="keyBox" class="mt-3 hidden">
-            <input type="password" id="licenseKey" placeholder="Enter license key..."
-                class="w-full bg-gray-900 border border-gray-600 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-500 outline-none">
-        </div>
+<body>
+<div class="card">
+  <div class="head">
+    <div><h1>Prompt Polisher &#128142;</h1><div class="sub">Turn rough ideas into production-grade AI prompts, with a built-in rationale.</div></div>
+    <span id="trialBadge" class="badge">Free trial active</span>
+  </div>
+
+  <input type="text" id="website" name="website" style="position:absolute;left:-9999px;opacity:0" tabindex="-1" autocomplete="off">
+
+  <label for="roughPrompt">Rough prompt</label>
+  <textarea id="roughPrompt" maxlength="3000" placeholder="e.g. help me write a cold email to a SaaS founder about my analytics tool"></textarea>
+  <div class="row">
+    <button class="btn ghost" onclick="seedExample()">Try an example &#10024;</button>
+    <button class="btn ghost" onclick="toggleHow()">How it works &#9432;</button>
+  </div>
+
+  <details id="howBox" class="hidden">
+    <summary>What is a &ldquo;meta-prompt&rdquo; and why does this help?</summary>
+    <p>Prompt Polisher does <b>not</b> answer your question. It writes a precise, structured prompt that <i>another</i> AI (ChatGPT, Claude, etc.) will execute. Each result ships with the anatomy: <b>Role &rarr; Objective &rarr; Context &rarr; Workflow &rarr; Output contract &rarr; Verification</b>, plus a &ldquo;why this works&rdquo; breakdown so you learn the craft while you use it.</p>
+    <ul><li>Be specific about the deliverable and audience.</li><li>State constraints and the exact output format.</li><li>Ask for a self-check to reduce hallucination.</li></ul>
+  </details>
+
+  <button id="polishBtn" class="btn" onclick="polishPrompt()"><span id="btnText">Polish Prompt &#10024;</span><span id="spinner" class="spin hidden"></span></button>
+
+  <div id="resultWrap" class="hidden">
+    <div id="metaBar" class="meta"></div>
+
+    <div id="polishedSec" class="sec ok">
+      <div class="row" style="margin-top:0"><h3 style="margin:0">Polished Masterpiece</h3><button class="btn ghost" onclick="copyOut()">Copy</button></div>
+      <textarea id="polishedOutput" class="out" readonly></textarea>
     </div>
-    <div id="paywallModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50 hidden">
-        <div class="bg-gray-800 border border-gray-700 rounded-xl p-6 max-w-sm w-full text-center shadow-2xl">
-            <div class="text-4xl mb-3">💎</div>
-            <h2 class="text-xl font-bold text-white mb-2">Access Limit Reached</h2>
-            <p id="paywallMsg" class="text-gray-300 text-sm mb-6">Unlock 3 months of access (up to 600 prompts) for just $3.50!</p>
-            <a href="${CONFIG.PAYMENT_LINK}" target="_blank"
-                class="block w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3.5 rounded-lg transition-all mb-3 shadow-lg shadow-blue-600/30">
-                Unlock 3 Months Access ($3.50)
-            </a>
-            <button onclick="closePaywall()" class="text-xs text-gray-400 hover:text-white underline">I have a key / Enter key</button>
-        </div>
+
+    <div id="clarifySec" class="sec warn hidden">
+      <h3>Clarifying questions</h3>
+      <ul id="clarifyList"></ul>
+      <label for="answers">Your answers (optional &mdash; improves the result)</label>
+      <textarea id="answers" placeholder="Answer any of the questions above, then click Refine."></textarea>
+      <button class="btn" onclick="refine()"><span id="refineText">Refine prompt &#128260;</span><span id="refineSpin" class="spin hidden"></span></button>
     </div>
-    <script src="/frontend.js">
-  console.log("Frontend script loaded");
-        let deviceFingerprint = '';
 
-        async function computeDeviceFingerprint() {
-            const parts = [];
+    <div id="unsafeSec" class="sec bad hidden"><h3>Can&rsquo;t polish this</h3><p id="unsafeMsg" style="color:var(--mut);font-size:13px"></p></div>
 
-            try {
-                const c = document.createElement('canvas');
-                const ctx = c.getContext('2d');
-                if (ctx) {
-                    ctx.textBaseline = 'alphabetic';
-                    ctx.fillStyle = '#f60';
-                    ctx.fillRect(2, 2, 40, 20);
-                    ctx.fillStyle = '#069';
-                    ctx.font = '16px "Courier New"';
-                    ctx.fillText('PromptPolisher v2', 4, 18);
-                    ctx.fillStyle = 'rgba(100, 200, 0, 0.5)';
-                    ctx.fillText('\\u272F', 2, 12);
-                    parts.push(c.toDataURL('image/png'));
-                }
-            } catch (e) {
-                parts.push('no-canvas');
-            }
+    <div id="whySec" class="sec"><h3>Why this works</h3><ul id="whyList"></ul></div>
+    <div id="assumpSec" class="sec"><h3>Assumptions</h3><ul id="assumpList"></ul></div>
+    <div id="upgradeSec" class="sec"><h3>Optional upgrades</h3><ul id="upgradeList"></ul></div>
+    <div id="safetySec" class="sec warn"><h3>Safety notes</h3><ul id="safetyList"></ul></div>
+  </div>
 
-            try {
-                const c = document.createElement('canvas');
-                const gl = c.getContext('webgl') || c.getContext('experimental-webgl');
-                if (gl) {
-                    const dbg = gl.getExtension('WEBGL_debug_renderer_info');
-                    if (dbg) {
-                        parts.push(gl.getParameter(dbg.UNMASKED_VENDOR_WEBGL));
-                        parts.push(gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL));
-                    }
-                }
-            } catch (e) {
-                parts.push('no-webgl');
-            }
+  <div class="foot">
+    <button onclick="toggleKey()">&#128273; Have a license key?</button>
+    <a href="${CONFIG.PAYMENT_LINK}" target="_blank" rel="noopener noreferrer">Get 3 months access ($3.50) &#8599;</a>
+  </div>
+  <div id="keyBox" class="hidden"><input type="password" id="licenseKey" placeholder="Enter license key..."></div>
+</div>
 
-            parts.push(navigator.hardwareConcurrency || 'unknown');
-            parts.push(navigator.deviceMemory || 'unknown');
-            parts.push(navigator.platform || 'unknown');
-            parts.push(navigator.language || 'unknown');
-            parts.push(new Date().getTimezoneOffset());
-            parts.push(screen.width + 'x' + screen.height + 'x' + screen.colorDepth);
-            parts.push(window.devicePixelRatio || 1);
-            parts.push('ontouchstart' in window ? 'touch' : 'no-touch');
+<div id="paywallModal" class="modal hidden">
+  <div class="box"><div class="gem">&#128142;</div><h2>Access limit reached</h2><p id="paywallMsg">Unlock 3 months (up to 600 prompts) for $3.50.</p>
+  <a class="btn" style="text-decoration:none" href="${CONFIG.PAYMENT_LINK}" target="_blank" rel="noopener noreferrer">Unlock 3 Months ($3.50)</a>
+  <div class="row" style="justify-content:center"><button class="btn ghost" onclick="closePaywall()">I have a key</button></div></div>
+</div>
+<div id="toast" class="toast"></div>
 
-            const testFonts = ['Courier New', 'Georgia', 'Times New Roman', 'Arial', 'Verdana', 'Helvetica'];
-            const baseFonts = ['monospace', 'sans-serif', 'serif'];
-            const testString = 'mmmmmmmmmmlil';
-            const defaultWidths = baseFonts.map(f => getTextWidth(testString, '12px ' + f));
-            const detected = [];
-
-            for (const font of testFonts) {
-                const matched = baseFonts.some((base, i) =>
-                    getTextWidth(testString, '12px "' + font + '", ' + base) !== defaultWidths[i]
-                );
-                if (matched) detected.push(font);
-            }
-
-            parts.push(detected.join(','));
-            const raw = parts.join('||');
-
-            let hash = 0;
-            for (let i = 0; i < raw.length; i++) {
-                const ch = raw.charCodeAt(i);
-                hash = ((hash << 5) - hash) + ch;
-                hash |= 0;
-            }
-
-            return 'D-' + Math.abs(hash).toString(36);
-        }
-
-        function getTextWidth(text, font) {
-            const c = document.createElement('canvas');
-            const ctx = c.getContext('2d');
-            if (!ctx) return 0;
-            ctx.font = font;
-            return ctx.measureText(text).width;
-        }
-
-        async function initFingerprint() {
-        }
-
-        function getSessionToken() {
-            let tok = sessionStorage.getItem('pp_session');
-            if (!tok) {
-                tok = 'S-' + Math.random().toString(36).substring(2, 10);
-                sessionStorage.setItem('pp_session', tok);
-            }
-            return tok;
-        }
-
-        function updateTrialBadge() {
-            const used = parseInt(localStorage.getItem('prompt_usage_count') || '0', 10);
-            const remaining = Math.max(0, 2 - used);
-            const badge = document.getElementById('trialBadge');
-
-            if (localStorage.getItem('pro_unlocked') === 'true') {
-                const proRem = localStorage.getItem('pro_remaining') || '600';
-                badge.innerText = 'Pro: ' + proRem + ' Left 💎';
-                badge.className = 'bg-green-900/50 text-green-300 text-xs px-3 py-1 rounded-full border border-green-700/50 font-semibold';
-            } else {
-                badge.innerText = remaining + ' Free Prompts Left';
-                if (remaining === 0) {
-                    badge.className = 'bg-red-900/50 text-red-300 text-xs px-3 py-1 rounded-full border border-red-700/50 font-semibold';
-                }
-            }
-        }
-
-        async function polishPrompt() {
-                  console.log("polishPrompt called");
-            const roughPrompt = document.getElementById('roughPrompt').value.trim();
-            const licenseKey = document.getElementById('licenseKey').value.trim();
-            const honeypot = document.getElementById('website').value;
-
-            if (honeypot) { console.warn('Honeypot triggered'); return; }
-
-            const deviceFingerprint = await computeDeviceFingerprint();
-            const btnText = document.getElementById('btnText');
-            const spinner = document.getElementById('spinner');
-            const outputContainer = document.getElementById('outputContainer');
-            const polishedOutput = document.getElementById('polishedOutput');
-
-            btnText.textContent = 'Polishing...';
-            spinner.classList.remove('hidden');
-
-            try {
-                const response = await fetch('/api/v1/polish', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'User-Agent': navigator.userAgent },
-                    body: JSON.stringify({
-                        prompt: roughPrompt,
-                        licenseKey: licenseKey,
-                        deviceHash: deviceFingerprint
-                    })
-                });
-
-                const data = await response.json();
-
-                if (data.error) {
-                    if (data.error.includes('Free trial limit') || data.error.includes('License')) {
-                        document.getElementById('paywallMsg').textContent = data.error;
-                        document.getElementById('paywallModal').classList.remove('hidden');
-                    } else {
-                        alert(data.error);
-                    }
-                    return;
-                }
-
-                polishedOutput.value = data.polished;
-                outputContainer.classList.remove('hidden');
-
-                if (!licenseKey) {
-                    const used = parseInt(localStorage.getItem('prompt_usage_count') || '0', 10);
-                    localStorage.setItem('prompt_usage_count', (used + 1).toString());
-                    updateTrialBadge();
-                }
-
-            } catch (error) {
-                alert('Error: ' + error);
-            } finally {
-                btnText.textContent = 'Polish Prompt ✨';
-                spinner.classList.add('hidden');
-            }
-        }
-
-        function copyToClipboard() {
-            const output = document.getElementById('polishedOutput');
-            output.select();
-            document.execCommand('copy');
-            alert('Copied to clipboard!');
-        }
-
-        function toggleKeyInput() {
-            const keyBox = document.getElementById('keyBox');
-            keyBox.classList.toggle('hidden');
-        }
-
-        function closePaywall() {
-            document.getElementById('paywallModal').classList.add('hidden');
-        }
-
-        document.addEventListener("DOMContentLoaded", async () => {
-            await initFingerprint();
-            updateTrialBadge();
-        });
+<script>
+var lastPrompt = '';
+var fpCache = null;
+function toast(m){var t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(function(){t.classList.remove('show');},2200);}
+function esc(s){return (s==null?'':String(s));}
+function setList(id,items){var ul=document.getElementById(id);ul.innerHTML='';(items||[]).forEach(function(x){var li=document.createElement('li');li.textContent=x;ul.appendChild(li);});}
+function show(id,on){document.getElementById(id).classList.toggle('hidden',!on);}
+function toggleKey(){show('keyBox',document.getElementById('keyBox').classList.contains('hidden'));}
+function toggleHow(){show('howBox',document.getElementById('howBox').classList.contains('hidden'));}
+function closePaywall(){show('paywallModal',false);show('keyBox',true);}
+function seedExample(){document.getElementById('roughPrompt').value='I want a 5-tweet thread that explains why small SaaS founders should care about unit economics, in a punchy but credible voice.';toast('Example loaded \\u2014 hit Polish \\u2728');}
+function updateBadge(rem,pro){var b=document.getElementById('trialBadge');if(pro){b.className='badge pro';b.textContent='Pro: '+rem+' left \\ud83d\\udc8e';}else if(rem===undefined){b.className='badge';b.textContent='Free trial active';}else{b.className='badge'+(rem<=0?' zero':'');b.textContent=rem+' free left';}}
+function getTextWidth(t,f){var c=document.createElement('canvas'),x=c.getContext('2d');if(!x)return 0;x.font=f;return x.measureText(t).width;}
+function computeFp(){if(fpCache)return Promise.resolve(fpCache);var p=[];try{var c=document.createElement('canvas'),x=c.getContext('2d');if(x){x.textBaseline='alphabetic';x.fillStyle='#f60';x.fillRect(2,2,40,20);x.fillStyle='#069';x.font='16px "Courier New"';x.fillText('PromptPolisher v2',4,18);p.push(c.toDataURL('image/png'));}}catch(e){p.push('nc');}try{var g=document.createElement('canvas'),gl=g.getContext('webgl');if(gl){var d=gl.getExtension('WEBGL_debug_renderer_info');if(d){p.push(gl.getParameter(d.UNMASKED_VENDOR_WEBGL));p.push(gl.getParameter(d.UNMASKED_RENDERER_WEBGL));}}}catch(e){p.push('nw');}p.push(navigator.hardwareConcurrency||'u');p.push(navigator.language||'u');p.push(new Date().getTimezoneOffset());p.push(screen.width+'x'+screen.height);p.push(window.devicePixelRatio||1);var raw=p.join('||'),h=0;for(var i=0;i<raw.length;i++){h=((h<<5)-h)+raw.charCodeAt(i);h|=0;}fpCache='D-'+Math.abs(h).toString(36);return Promise.resolve(fpCache);}
+function copyOut(){var v=document.getElementById('polishedOutput').value;if(!v)return;var done=function(){toast('Copied to clipboard \\u2705');};if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(v).then(done).catch(function(){var t=document.getElementById('polishedOutput');t.select();document.execCommand('copy');done();});}else{var t=document.getElementById('polishedOutput');t.select();document.execCommand('copy');done();}}
+function render(d){
+  show('resultWrap',true);
+  var mb=document.getElementById('metaBar');mb.innerHTML='';
+  function chip(k,v){var s=document.createElement('span');s.className='chip';s.innerHTML='<b>'+k+':</b> '+esc(v);mb.appendChild(s);}
+  if(d.detected_domain)chip('domain',d.detected_domain);
+  if(d.task_type)chip('task',d.task_type);
+  if(typeof d.confidence==='number')chip('confidence',Math.round(d.confidence*100)+'%');
+  if(d.metadata&&d.metadata.model)chip('model',d.metadata.model.split('/').pop());
+  var st=d.status||'polished';
+  show('polishedSec',!!d.polished_prompt);document.getElementById('polishedOutput').value=d.polished_prompt||'';
+  show('clarifySec',st==='needs_clarification'&&(d.clarifying_questions||[]).length>0);setList('clarifyList',d.clarifying_questions);
+  show('unsafeSec',st==='unsafe_or_unsupported');document.getElementById('unsafeMsg').textContent=st==='unsafe_or_unsupported'?'This request can\\u2019t be safely polished. Try reframing it within safety and professional boundaries.':'';
+  show('whySec',(d.why_this_works||[]).length>0);setList('whyList',d.why_this_works);
+  show('assumpSec',(d.assumptions||[]).length>0);setList('assumpList',d.assumptions);
+  show('upgradeSec',(d.optional_upgrades||[]).length>0);setList('upgradeList',d.optional_upgrades);
+  show('safetySec',(d.safety_notes||[]).length>0);setList('safetyList',d.safety_notes);
+  if(d.remainingPrompts!==undefined)updateBadge(d.remainingPrompts,!!document.getElementById('licenseKey').value.trim());
+  var el=document.getElementById('polishedOutput');el.style.height='auto';el.style.height=Math.min(600,el.scrollHeight+20)+'px';
+}
+function callApi(prompt,context,btnId,spinId,textId){
+  var btn=document.getElementById(btnId);btn.disabled=true;document.getElementById(spinId).classList.remove('hidden');document.getElementById(textId).textContent='Polishing...';
+  return computeFp().then(function(fp){
+    return fetch('/api/v1/polish',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:prompt,licenseKey:document.getElementById('licenseKey').value.trim(),deviceHash:fp,context:context||''})});
+  }).then(function(r){return r.json().then(function(j){return {ok:r.ok,status:r.status,data:j};});})
+   .then(function(res){
+     if(!res.ok||res.data.error){
+       if(res.status===402||res.status===401){document.getElementById('paywallMsg').textContent=res.data.error||'Access limit reached.';show('paywallModal',true);}
+       else toast(res.data.error||'Something went wrong.');
+       return;
+     }
+     render(res.data);
+   })
+   .catch(function(e){toast('Network error: '+e);})
+   .finally(function(){btn.disabled=false;document.getElementById(spinId).classList.add('hidden');document.getElementById(textId).textContent=(btnId==='polishBtn'?'Polish Prompt \\u2728':'Refine prompt \\ud83d\\udd01');});
+}
+function polishPrompt(){var p=document.getElementById('roughPrompt').value.trim();if(document.getElementById('website').value)return;if(!p){toast('Enter a prompt first.');return;}lastPrompt=p;callApi(p,'','polishBtn','spinner','btnText');}
+function refine(){var a=document.getElementById('answers').value.trim();callApi(lastPrompt,a,'','refineSpin','refineText');}
+document.addEventListener('DOMContentLoaded',function(){updateBadge(undefined);});
+</script>
 </body>
-</html>
-`;
+</html>`;
